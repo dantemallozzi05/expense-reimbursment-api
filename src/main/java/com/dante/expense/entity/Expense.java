@@ -41,6 +41,61 @@ public class Expense {
      */
     public Expense() {}
 
+    /**
+     * Sets timestamps, defaults to initial persist
+     *
+     * @pre none
+     *
+     * @post createdAt != NULL AND updatedAt != NULL
+     * @post status = SUBMITTED IFF status was NULL before persist
+     * @post currency = "USD" IFF currency was NULL before persist
+     */
+    void onCreate() {
+
+    }
+
+    /**
+     * updates updatedAt timestamp on update
+     *
+     * @pre none
+     *
+     * @post updatedAt is updated to current time
+     */
+    void onUpdate() {
+
+    }
+
+    /**
+     * @return the expense id
+     *
+     * @pre none
+     *
+     * @post getId = id
+     */
+    public Long getId() { return id; }
+
+    /**
+     * Sets expense id
+     *
+     * @param id id to set
+     *
+     * @pre id != NULL AND id >= 0
+     *
+     * @post this.id = id
+     */
+    public void setId(Long id) { this.id = id; }
+
+
+    /**
+     * Retrieves the current user
+     *
+     * @return the user who owns this expense
+     *
+     * @pre none
+     *
+     * @post getUser = user
+     */
+    public User getUser() { return user; }
 
 
 }
