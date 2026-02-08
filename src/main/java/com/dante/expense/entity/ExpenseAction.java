@@ -34,9 +34,13 @@ public class ExpenseAction {
 
     /**
      * autopopulates the timestamp on insert
+     *
+     * @pre none
+     *
+     * @post timestamp != NULL
      */
     void onCreate() {
-
+        timestamp = OffsetDateTime.now();
     }
 
     /**
