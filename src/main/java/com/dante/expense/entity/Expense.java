@@ -51,7 +51,13 @@ public class Expense {
      * @post currency = "USD" IFF currency was NULL before persist
      */
     void onCreate() {
+        OffsetDateTime now = OffsetDateTime.now();
 
+        createdAt = now;
+        updatedAt = now;
+
+        if (status == null) status = ExpenseStatus.SUBMITTED;
+        if (currency == null) currency = "USD";
     }
 
     /**
@@ -62,7 +68,7 @@ public class Expense {
      * @post updatedAt is updated to current time
      */
     void onUpdate() {
-
+        updatedAt = OffsetDateTime.now();
     }
 
     /**
@@ -144,7 +150,7 @@ public class Expense {
     /**
      * Set the currency type
      *
-     * @param currency the 3 letter code to set
+     * @param currency the 3-letter code to set
      *
      * @pre currency != NULL AND currency.length() = 3
      *
@@ -173,5 +179,124 @@ public class Expense {
      * @post this.category = category
      */
     public void setCategory(ExpenseCategory category) { this.category = category; }
+
+    /**
+     * Retrieve description of expense
+     *
+     * @return description string
+     *
+     * @pre none
+     *
+     * @post getDescription = description
+     */
+    public String getDescription() { return description; }
+
+    /**
+     * Set description of expense
+     *
+     * @param description the string to describe the expense
+     *
+     * @pre description != NULL AND description.length() > 0 AND description.length() <= 500
+     *
+     * @post this.description = description
+     */
+    public void setDescription(String description) { this.description = description; }
+
+    /**
+     * Retrieve the date of the expense
+     *
+     * @return the date the expense occurred
+     *
+     * @pre none
+     *
+     * @post getExpenseDate = expenseDate
+     */
+    public LocalDate getExpenseDate() { return expenseDate; }
+
+    /**
+     * Set the date of the expense
+     *
+     * @param expenseDate the date
+     *
+     * @pre expenseDate != NULL
+     *
+     * @post this.expenseDate = expenseDate
+     */
+    public void setExpenseDate(LocalDate expenseDate) { this.expenseDate = expenseDate; }
+
+    /**
+     * Retrieves status of expense
+     *
+     * @return expense status
+     *
+     * @pre none
+     *
+     * @post getStatus = status
+     */
+    public ExpenseStatus getStatus() { return status; }
+
+    /**
+     * Sets the status of the expense
+     *
+     * @param status status to set
+     *
+     * @pre status != NULL
+     *
+     * @post this.status = status
+     */
+    public void setStatus(ExpenseStatus status) { this.status = status; }
+
+    /**
+     * Get the timestamp of creation
+     *
+     * @return creation time
+     *
+     * @pre none
+     *
+     * @post getCreatedAt = createdAt
+     */
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    /**
+     * Set the timestamp of creation
+     *
+     * @param createdAt the timestamp
+     *
+     * @pre createdAt != NULL
+     *
+     * @post this.createdAt = createdAt
+     */
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    /**
+     * Retrieves the timestamp of most recent update
+     *
+     * @return timestamp of update
+     *
+     * @pre none
+     *
+     * @post getUpdatedAt = updatedAt
+     */
+    public OffsetDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    /**
+     * Sets upDatedAt, usually set by controller
+     *
+     * @param updatedAt the timestamp
+     *
+     * @pre updatedAt != NULL
+     *
+     * @post this.updatedAt = updatedAt
+     */
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
 
 }
