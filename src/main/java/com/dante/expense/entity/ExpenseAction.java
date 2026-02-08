@@ -86,63 +86,96 @@ public class ExpenseAction {
 
     /**
      *
-     * @return
+     * @return user performing the action
+     *
+     * @pre none
+     *
+     * @post getActor = actor
      */
     public User getActor() {
         return actor;
     }
 
     /**
+     * Sets the user performing the action
      *
-     * @param actor
+     * @param actor user who performed action
+     *
+     * @pre actor != NULL
+     *
+     * @post this.actor = actor
      */
     public void setActor(User actor) {
         this.actor = actor;
     }
 
     /**
+     * @return type of action as a str
      *
-     * @return
+     * @pre none
+     *
+     * @post getAction = action
      */
     public String getAction() {
         return action;
     }
 
     /**
+     * Sets the type of action performed
      *
-     * @param action
+     * @param action action type as str
+     *
+     * @pre action != NULL AND action.length() > 0
+     *
+     * @post this.action = action
      */
     public void setAction(String action) {
         this.action = action;
     }
 
     /**
+     * @return comment of action
      *
-     * @return
+     * @pre none
+     *
+     * @post getComment = comment
      */
     public String getComment() {
         return comment;
     }
 
     /**
+     * Sets an optional comment
      *
-     * @param comment
+     * @param comment the comment as a str
+     *
+     * @pre none
+     *
+     * @post this.comment = comment
      */
     public void setComment(String comment) {
         this.comment = comment;
     }
 
     /**
+     * @return timestamp of action
      *
-     * @return
+     * @pre none
+     *
+     * @post getTimestamp = timestamp
      */
     public OffsetDateTime getTimestamp() {
         return timestamp;
     }
 
     /**
+     * Sets the timestamp of an action
      *
-     * @param timestamp
+     * @param timestamp the timestamp
+     *
+     * @pre timestamp != NULL
+     *
+     * @post this.timestamp = timestamp
      */
     public void setTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
