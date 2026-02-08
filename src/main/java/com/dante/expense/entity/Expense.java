@@ -97,5 +97,81 @@ public class Expense {
      */
     public User getUser() { return user; }
 
+    /**
+     * sets the owning user for this expense
+     *
+     * @param user the user with the expense
+     *
+     * @pre user != NULL
+     *
+     * @post this.user = user
+     */
+    public void setUser(User user) { this.user = user; }
+
+    /**
+     * Gets the cost of the expense
+     *
+     * @return the expense amount
+     *
+     * @pre none
+     *
+     * @post getAmount = amount
+     */
+    public BigDecimal getAmount() { return amount; }
+
+    /**
+     * Sets the expense amount
+     *
+     * @param amount amount to set the expense as
+     *
+     * @pre amount != NULL AND amount > 0
+     *
+     * @post this.amount = amount
+     */
+    public void setAmount(BigDecimal amount) { this.amount = amount; }
+
+    /**
+     * Retrieve the currency type
+     *
+     * @return 3 letter currency code
+     *
+     * @pre none
+     *
+     * @post getCurrency = currency
+     */
+    public String getCurrency() { return currency; }
+
+    /**
+     * Set the currency type
+     *
+     * @param currency the 3 letter code to set
+     *
+     * @pre currency != NULL AND currency.length() = 3
+     *
+     * @post this.currency = currency
+     */
+    public void setCurrency(String currency) { this.currency = currency; }
+
+    /**
+     * Get category of expense
+     *
+     * @return category of expense
+     *
+     * @pre none
+     *
+     * @post getCategory = category
+     */
+    public ExpenseCategory getCategory() { return category; }
+
+    /**
+     * set the category of the expense
+     *
+     * @param category the category to set
+     *
+     * @pre category != NULL
+     *
+     * @post this.category = category
+     */
+    public void setCategory(ExpenseCategory category) { this.category = category; }
 
 }
