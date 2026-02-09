@@ -18,11 +18,21 @@ import java.time.OffsetDateTime;
 @Entity
 @Table(name = "expense_actions")
 public class ExpenseAction {
+    @Id
+    @GeneratedValue
     private Long id;
+
+    @ManyToOne
     private Expense expense;
+
+    @ManyToOne
     private User actor;
-    private String action;
+
+    private ExpenseActionType actionType;
+
     private String comment;
+
+
     private OffsetDateTime timestamp;
 
     /**
@@ -130,21 +140,21 @@ public class ExpenseAction {
      * @post getAction = action
      */
     @Column(nullable = false)
-    public String getAction() {
-        return action;
+    public ExpenseActionType getActionType() {
+        return actionType;
     }
 
     /**
      * Sets the type of action performed
      *
-     * @param action action type as str
+     * @param actionType action type as enum
      *
-     * @pre action != NULL AND action.length() > 0
+     * @pre actionType != NULL AND actionType.length() > 0
      *
-     * @post this.action = action
+     * @post this.actionType = actionType
      */
-    public void setAction(String action) {
-        this.action = action;
+    public void setActionType(ExpenseActionType actionType) {
+        this.actionType = actionType;
     }
 
     /**

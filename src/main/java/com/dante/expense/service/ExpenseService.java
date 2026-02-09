@@ -4,6 +4,7 @@ import com.dante.expense.dto.CreateExpenseRequest;
 import com.dante.expense.dto.ExpenseResponse;
 import com.dante.expense.entity.Expense;
 import com.dante.expense.entity.ExpenseAction;
+import com.dante.expense.entity.ExpenseActionType;
 import com.dante.expense.entity.User;
 import com.dante.expense.exception.NotFoundException;
 import com.dante.expense.repository.ExpenseActionRepository;
@@ -83,13 +84,7 @@ public class ExpenseService {
 
         Expense saved = expenseRepo.save(e);
 
-        ExpenseAction action = new ExpenseAction();
-
-        action.setExpense(saved);
-        action.setActor(user);
-        action.setAction("SUBMIT");
-        action.setComment(null);
-        actionRepo.save(action);
+        logAction(saved, user, ExpenseActionType.SUBMIT, null);
 
         return toResponse(saved);
 
@@ -158,6 +153,31 @@ public class ExpenseService {
         r.setUpdatedAt(e.getUpdatedAt());
 
         return r;
+    }
+
+    /**
+     * Helper method for logging each action for record
+     *
+     * @param expense the expense that the action was for
+     * @param actor the user performing the action
+     * @param type what type of action was performed
+     * @param comment an optional comment
+     *
+     * @pre expense OR expense.id OR actor OR actor.id OR type != NULL
+     *
+     * @post One ExpenseAction obj is persisted
+     * @post expense = #expense AND actor = #actor AND type = #type AND comment = #comment
+     * @post createdAt = current timestamp
+     */
+    private void logAction(Expense expense, User actor, ExpenseActionType type, String comment) {
+        ExpenseAction action = new ExpenseAction();
+
+        action.setExpense(expense);
+        action.setActor(actor);
+        action.setActionType(type);
+        action.setComment(comment);
+
+        actionRepo.save(action);
     }
 
 
