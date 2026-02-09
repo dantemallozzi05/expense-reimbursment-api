@@ -94,4 +94,70 @@ public class ExpenseService {
 
     }
 
+    /**
+     * Retrieves an expense via id
+     *
+     * @param id the id of the expense
+     *
+     * @return the expense response
+     *
+     * @pre id != NULL AND id >= 0
+     *
+     * @post return != NULL
+     * @post return.id = id
+     *
+     * @throws NotFoundException if no expense exists with inputted id
+     */
+    public ExpenseResponse getExpense(Long id)  {
+        Expense e = expenseRepo.findById(id).orElseThrow(() -> new NotFoundException("Expense " + id + " not found"));
+
+        return toResponse(e);
+    }
+
+    /**
+     * Lists all expenses belonging to the specified user
+     *
+     * @param userId the user's id
+     *
+     * @return list of expense responses ([] if none)
+     *
+     * @pre userId != NULL AND userId >= 0
+     *
+     * @post return != NULL
+     * @post for all r in return, r.userId = userId
+     */
+    public List<ExpenseResponse> ListExpensesByUser(Long userId) {
+        return expenseRepo.findByUserId(userId).stream().map(this::toResponse).toList();
+    }
+
+    /**
+     * Converts an expense obj into an ExpenseResponse dto
+     *
+     * @param e expense obj
+     *
+     * @return mapped response
+     *
+     * @pre e != NULL AND e.user != NULL
+     *
+     * @post return != NULL
+     * @post return.id = e.id AND return.userId = e.user.id
+     */
+    private ExpenseResponse toResponse(Expense e) {
+        ExpenseResponse r = new ExpenseResponse();
+
+        r.setId(e.getId());
+        r.setUserId(e.getUser().getId());
+        r.setAmount(e.getAmount());
+        r.setCurrency(e.getCurrency());
+        r.setCategory(e.getCategory());
+        r.setDescription(e.getDescription());
+        r.setExpenseDate(e.getExpenseDate());
+        r.setStatus(e.getStatus());
+        r.setCreatedAt(e.getCreatedAt());
+        r.setUpdatedAt(e.getUpdatedAt());
+
+        return r;
+    }
+
+
 }
