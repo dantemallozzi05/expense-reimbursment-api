@@ -2,6 +2,7 @@ package com.dante.expense.controller;
 
 import com.dante.expense.dto.CreateExpenseRequest;
 import com.dante.expense.dto.ExpenseResponse;
+import com.dante.expense.dto.RejectExpenseRequest;
 import com.dante.expense.service.ExpenseService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -86,6 +87,23 @@ public class ExpenseController {
     @GetMapping
     public List<ExpenseResponse> listByUser(Long userId) {
         return expenseService.ListExpensesByUser(userId);
+    }
+
+    @PutMapping("/{id}/approve")
+    public ExpenseResponse approveExpense(
+            @RequestHeader("X-User-Id") Long actorUserId,
+            @PathVariable("id") Long expenseId
+    ) {
+        return expenseService.approveExpense(actorUserId, expenseId);
+    }
+
+    public ExpenseResponse rejectExpense(
+            @RequestHeader("X-User-Id") Long actorUserId,
+            @PathVariable("id") Long expenseId,
+            @RequestBody RejectExpenseRequest req
+    ) {
+        String reason = (req == null) ? null : req.getReason();
+        return expenseService.rejectExpense(actorUserId, expenseId, reason);
     }
 
 
