@@ -7,15 +7,15 @@ import com.dante.expense.entity.ExpenseAction;
 import com.dante.expense.entity.ExpenseActionType;
 import com.dante.expense.entity.User;
 import com.dante.expense.exception.NotFoundException;
+import com.dante.expense.exception.ForbiddenException;
+import com.dante.expense.exception.BadRequestException;
 import com.dante.expense.repository.ExpenseActionRepository;
 import com.dante.expense.repository.ExpenseRepository;
 import com.dante.expense.repository.UserRepository;
 import com.dante.expense.entity.Role;
 import com.dante.expense.entity.ExpenseStatus;
-import com.dante.expense.exception.Forbidden
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import
 
 import java.util.List;
 
@@ -182,6 +182,60 @@ public class ExpenseService {
         action.setComment(comment);
 
         actionRepo.save(action);
+    }
+
+    /**
+     * Approves a submitted expense and logs the action
+     *
+     * @param actorUserId the user's id who submitted the expense
+     * @param expenseId id of the expense to approve
+     *
+     * @return response representing the updated expense
+     *
+     * @pre actorUserId != NULL AND actorUserId >= 0
+     * @pre expenseId != NULL AND expenseId >= 0
+     *
+     * @post return != NULL
+     * @post return.id = expenseId
+     * @post return.status = APPROVED
+     * @post an ExpenseAction is persisted with:
+     *      actionType = APPROVE, actor.id = actorUserId, expense.id = expenseId
+     *
+     * @throws NotFoundException if actor user / expense doesn't exist
+     * @throws ForbiddenException if actor isn't a MANAGER
+     * @throws BadRequestException if expense.status != SUBMITTED
+     */
+    @Transactional
+    public ExpenseResponse approveExpense(Long actorUserId, Long expenseId) {
+
+    }
+
+    /**
+     * Rejects a submitted expense and logs a REJECT audit
+     *
+     * @param actorUserId id of the user performing the rejection
+     * @param expenseId id of the expense to reject
+     * @param reason optional comment explaining the rejection
+     *
+     * @return response representing the updated expense
+     *
+     * @pre actorUserId != NULL AND actorUserId >= 0
+     * @pre expenseId != NULL AND expenseId >= 0
+     *
+     * @post return != NULL
+     * @post return.id = expenseId
+     * @post return.status = REJECTED
+     * @post an ExpenseAction is persisted with:
+     *      actionType = REJECT, actor.id = actorUserId, expense.id = expenseId,
+     *      comment = reason
+     *
+     * @throws NotFoundException if actor user / expense doesn't exist
+     * @throws ForbiddenException if actor isn't a MANAGER
+     * @throws BadRequestException if expense.status != SUBMITTED
+     */
+    @Transactional
+    public ExpenseResponse rejectExpense(Long actorUserId, Long expenseId, String reason) {
+
     }
 
 
