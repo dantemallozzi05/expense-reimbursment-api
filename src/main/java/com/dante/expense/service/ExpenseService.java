@@ -167,7 +167,9 @@ public class ExpenseService {
      * @param type what type of action was performed
      * @param comment an optional comment
      *
-     * @pre expense AND expense.id AND actor AND actor.id AND type != NULL
+     * @pre expense != NULL AND expense.id != NULL
+     * @pre actor != NULL AND actor.id != NULL
+     * @pre type != NULL
      *
      * @post One ExpenseAction obj is persisted
      * @post expense = #expense AND actor = #actor AND type = #type AND comment = #comment
@@ -207,7 +209,24 @@ public class ExpenseService {
      */
     @Transactional
     public ExpenseResponse approveExpense(Long actorUserId, Long expenseId) {
+        User actor = userRepo.findById(actorUserId).orElseThrow(() -> new NotFoundException("User " + actorUserId + " not found."));
 
+        if (actor.getRole() != Role.MANAGER) {
+            throw new ForbiddenException("Only a MANAGER can approve expenses.");
+        }
+
+        Expense expense = expenseRepo.findById(expenseId).orElseThrow(() -> new NotFoundException("Expense " + expenseId + " not found."));
+
+        if (expense.getStatus() != ExpenseStatus.SUBMITTED) {
+            throw new BadRequestException("Only SUBMITTED expenses can be approved. Current: " + expense.getStatus());
+        }
+
+        expense.setStatus(ExpenseStatus.APPROVED);
+        Expense saved = expenseRepo.save(expense);
+
+        logAction(saved, actor, ExpenseActionType.APPROVE, null);
+
+        return toResponse(saved);
     }
 
     /**
@@ -235,7 +254,24 @@ public class ExpenseService {
      */
     @Transactional
     public ExpenseResponse rejectExpense(Long actorUserId, Long expenseId, String reason) {
+        User actor = userRepo.findById(actorUserId).orElseThrow(() -> new NotFoundException("User " + actorUserId + " not found."));
 
+        if (actor.getRole() != Role.MANAGER) {
+            throw new ForbiddenException("Only a MANAGER can reject expenses.");
+        }
+
+        Expense expense = expenseRepo.findById(expenseId).orElseThrow(() -> new NotFoundException("Expense " + expenseId + " not found."));
+
+        if (expense.getStatus() != ExpenseStatus.SUBMITTED) {
+            throw new BadRequestException("Only SUBMITTED expenses can be rejected. Current: " + expense.getStatus());
+        }
+
+        expense.setStatus(ExpenseStatus.REJECTED);
+        Expense saved = expenseRepo.save(expense);
+
+        logAction(saved, actor, ExpenseActionType.REJECT, reason);
+
+        return toResponse(saved);
     }
 
 
