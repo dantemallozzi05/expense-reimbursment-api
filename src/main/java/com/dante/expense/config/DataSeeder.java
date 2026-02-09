@@ -11,7 +11,8 @@ import org.springframework.stereotype.Component;
  *
  * @invariant userRepo != NULL
  */
-public class DataSeeder {
+@Component
+public class DataSeeder implements CommandLineRunner {
     private final UserRepository userRepo;
 
     /**
@@ -36,6 +37,7 @@ public class DataSeeder {
      *
      * @post userRepo.count() >= 1
      */
+    @Override
     public void run(String... args) {
         if (userRepo.count() > 0) return;
 

@@ -47,7 +47,10 @@ public class ExpenseController {
      * @post return.userId = userId
      */
     @PostMapping
-    public ExpenseResponse create(Long userId, CreateExpenseRequest req) {
+    public ExpenseResponse create(
+            @RequestHeader("X-User-Id") Long userId,
+            @Valid @RequestBody CreateExpenseRequest req
+    ) {
         return expenseService.createExpense(userId, req);
     }
 
@@ -63,7 +66,7 @@ public class ExpenseController {
      * @post return != NULL
      * @post return.id = id
      */
-    @GetMapping("/{id")
+    @GetMapping("/{id}")
     public ExpenseResponse getById(Long id) {
         return expenseService.getExpense(id);
     }
