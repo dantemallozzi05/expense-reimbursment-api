@@ -1,6 +1,7 @@
 package com.dante.expense.entity;
 
 import jakarta.persistence.*;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -20,6 +21,8 @@ import java.time.OffsetDateTime;
  * @invariant createdAt != NULL
  * @invariant updatedAt != NULL
  */
+@Entity
+@Table(name = "expenses")
 public class Expense {
     private Long id;
     private User user;
@@ -50,6 +53,7 @@ public class Expense {
      * @post status = SUBMITTED IFF status was NULL before persist
      * @post currency = "USD" IFF currency was NULL before persist
      */
+    @PrePersist
     void onCreate() {
         OffsetDateTime now = OffsetDateTime.now();
 
@@ -67,6 +71,7 @@ public class Expense {
      *
      * @post updatedAt is updated to current time
      */
+    @PreUpdate
     void onUpdate() {
         updatedAt = OffsetDateTime.now();
     }
@@ -78,6 +83,8 @@ public class Expense {
      *
      * @post getId = id
      */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() { return id; }
 
     /**
@@ -91,7 +98,6 @@ public class Expense {
      */
     public void setId(Long id) { this.id = id; }
 
-
     /**
      * Retrieves the current user
      *
@@ -101,6 +107,8 @@ public class Expense {
      *
      * @post getUser = user
      */
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     public User getUser() { return user; }
 
     /**
@@ -123,6 +131,7 @@ public class Expense {
      *
      * @post getAmount = amount
      */
+    @Column(nullable = false, precision = 12, scale = 2)
     public BigDecimal getAmount() { return amount; }
 
     /**
@@ -145,6 +154,7 @@ public class Expense {
      *
      * @post getCurrency = currency
      */
+    @Column(nullable = false, length = 3)
     public String getCurrency() { return currency; }
 
     /**
@@ -167,6 +177,8 @@ public class Expense {
      *
      * @post getCategory = category
      */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     public ExpenseCategory getCategory() { return category; }
 
     /**
@@ -189,6 +201,7 @@ public class Expense {
      *
      * @post getDescription = description
      */
+    @Column(nullable = false, length = 500)
     public String getDescription() { return description; }
 
     /**
@@ -211,6 +224,7 @@ public class Expense {
      *
      * @post getExpenseDate = expenseDate
      */
+    @Column(nullable = false)
     public LocalDate getExpenseDate() { return expenseDate; }
 
     /**
@@ -233,6 +247,8 @@ public class Expense {
      *
      * @post getStatus = status
      */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     public ExpenseStatus getStatus() { return status; }
 
     /**
@@ -255,6 +271,7 @@ public class Expense {
      *
      * @post getCreatedAt = createdAt
      */
+    @Column(nullable = false)
     public OffsetDateTime getCreatedAt() {
         return createdAt;
     }
@@ -281,6 +298,7 @@ public class Expense {
      *
      * @post getUpdatedAt = updatedAt
      */
+    @Column(nullable = false)
     public OffsetDateTime getUpdatedAt() {
         return updatedAt;
     }
