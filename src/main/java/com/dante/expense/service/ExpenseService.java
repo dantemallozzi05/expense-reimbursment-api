@@ -10,8 +10,12 @@ import com.dante.expense.exception.NotFoundException;
 import com.dante.expense.repository.ExpenseActionRepository;
 import com.dante.expense.repository.ExpenseRepository;
 import com.dante.expense.repository.UserRepository;
+import com.dante.expense.entity.Role;
+import com.dante.expense.entity.ExpenseStatus;
+import com.dante.expense.exception.Forbidden
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import
 
 import java.util.List;
 
@@ -163,7 +167,7 @@ public class ExpenseService {
      * @param type what type of action was performed
      * @param comment an optional comment
      *
-     * @pre expense OR expense.id OR actor OR actor.id OR type != NULL
+     * @pre expense AND expense.id AND actor AND actor.id AND type != NULL
      *
      * @post One ExpenseAction obj is persisted
      * @post expense = #expense AND actor = #actor AND type = #type AND comment = #comment

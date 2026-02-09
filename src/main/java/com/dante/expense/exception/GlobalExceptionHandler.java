@@ -1,19 +1,20 @@
 package com.dante.expense.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+
+import static org.springframework.http.HttpStatus.*;
 
 /**
  * Centralized exception handler that converts exceptions into consistent JSON error responses
  *
  * @invariant this != NULL
  */
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     /**
@@ -31,6 +32,7 @@ public class GlobalExceptionHandler {
      * @post return.body.status = 404
      * @post return.body.path = req.getRequestURI()
      */
+    @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ApiError> notFound(NotFoundException ex, HttpServletRequest req) {
         ApiError err = new ApiError();
         err.setStatus(NOT_FOUND.value());
@@ -55,17 +57,40 @@ public class GlobalExceptionHandler {
      * @post return.body.status = 400
      * @post return.body.path = req.getRequestURI()
      */
-    public ResponseEntity<ApiError> badValidation(MethodArgumentNotValidException ex, HttpServletRequest req) {
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ApiError> badRequest(MethodArgumentNotValidException ex, HttpServletRequest req) {
         ApiError err = new ApiError();
         err.setStatus(BAD_REQUEST.value());
         err.setError("Bad Request");
-        err.setMessage(
-                ex.getBindingResult().getFieldErrors().stream()
-                        .findFirst()
-                        .map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
-                        .orElse("Validation failed")
-        );
+        err.setMessage(ex.getMessage());
         err.setPath(req.getRequestURI());
         return ResponseEntity.status(BAD_REQUEST).body(err);
     }
+
+    /**
+     * Handles ForbiddenException by returning HTTP 403 with an ApiError body
+     *
+     * @param ex the thrown ForbiddenException
+     * @param req http request
+     *
+     * @return ResponseEntity<ApiError> with status 403
+     *
+     * @pre ex != NULL AND req != NULL
+     *
+     * @post return != NULL
+     * @post return.status = 403
+     * @post return.body.status = 403
+     * @post return.body.path = req.getRequestURI()
+     */
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ApiError> forbidden(ForbiddenException ex, HttpServletRequest req) {
+        ApiError err = new ApiError();
+        err.setStatus(FORBIDDEN.value());
+        err.setError("Forbidden");
+        err.setMessage(ex.getMessage());
+        err.setPath(req.getRequestURI());
+
+        return ResponseEntity.status(FORBIDDEN).body(err);
+    }
+
 }

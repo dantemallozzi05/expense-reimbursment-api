@@ -12,27 +12,33 @@ import java.time.OffsetDateTime;
  * @invariant id >= 0
  * @invariant expense != NULL
  * @invariant actor != NULL
- * @invariant action != NULL AND action.length() > 0
+ * @invariant actionType != NULL
  * @invariant timestamp != NULL
  */
 @Entity
 @Table(name = "expense_actions")
 public class ExpenseAction {
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "expense_id")
     private Expense expense;
 
-    @ManyToOne
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "actor_user_id", nullable = false)
     private User actor;
 
+    @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false)
     private ExpenseActionType actionType;
 
+    @Column(length = 500)
     private String comment;
 
-
+    @Column(nullable = false)
     private OffsetDateTime timestamp;
 
     /**
@@ -63,8 +69,6 @@ public class ExpenseAction {
      *
      * @post getId = id
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() { return id; }
 
     /**
@@ -86,8 +90,6 @@ public class ExpenseAction {
      *
      * @post getExpense = expense
      */
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "expense_id")
     public Expense getExpense() {
         return expense;
     }
@@ -113,8 +115,6 @@ public class ExpenseAction {
      *
      * @post getActor = actor
      */
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "actor_user_id")
     public User getActor() {
         return actor;
     }
@@ -137,9 +137,8 @@ public class ExpenseAction {
      *
      * @pre none
      *
-     * @post getAction = action
+     * @post getActionType = actionType
      */
-    @Column(nullable = false)
     public ExpenseActionType getActionType() {
         return actionType;
     }
@@ -149,7 +148,7 @@ public class ExpenseAction {
      *
      * @param actionType action type as enum
      *
-     * @pre actionType != NULL AND actionType.length() > 0
+     * @pre actionType != NULL
      *
      * @post this.actionType = actionType
      */
@@ -164,7 +163,6 @@ public class ExpenseAction {
      *
      * @post getComment = comment
      */
-    @Column(length = 500)
     public String getComment() {
         return comment;
     }
@@ -189,7 +187,6 @@ public class ExpenseAction {
      *
      * @post getTimestamp = timestamp
      */
-    @Column(nullable = false)
     public OffsetDateTime getTimestamp() {
         return timestamp;
     }
@@ -206,8 +203,5 @@ public class ExpenseAction {
     public void setTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
     }
-
-
-
 
 }
