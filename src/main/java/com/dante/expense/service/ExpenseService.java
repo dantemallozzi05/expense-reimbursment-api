@@ -21,6 +21,7 @@ import java.util.List;
  * @invariant userRepo != NULL
  * @invariant actionRepo != NULL
  */
+@Service
 public class ExpenseService {
 
     private final ExpenseRepository expenseRepo;

@@ -14,6 +14,8 @@ import java.util.List;
  *
  * @invariant expenseService != NULL
  */
+@RestController
+@RequestMapping("/api/expenses")
 public class ExpenseController {
     private final ExpenseService expenseService;
 
@@ -44,6 +46,7 @@ public class ExpenseController {
      * @post return != NULL
      * @post return.userId = userId
      */
+    @PostMapping
     public ExpenseResponse create(Long userId, CreateExpenseRequest req) {
         return expenseService.createExpense(userId, req);
     }
@@ -60,6 +63,7 @@ public class ExpenseController {
      * @post return != NULL
      * @post return.id = id
      */
+    @GetMapping("/{id")
     public ExpenseResponse getById(Long id) {
         return expenseService.getExpense(id);
     }
@@ -76,6 +80,7 @@ public class ExpenseController {
      * @post return != NULL
      * @post for all r in return, r.userId = userId
      */
+    @GetMapping
     public List<ExpenseResponse> listByUser(Long userId) {
         return expenseService.ListExpensesByUser(userId);
     }

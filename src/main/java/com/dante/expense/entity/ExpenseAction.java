@@ -15,6 +15,8 @@ import java.time.OffsetDateTime;
  * @invariant action != NULL AND action.length() > 0
  * @invariant timestamp != NULL
  */
+@Entity
+@Table(name = "expense_actions")
 public class ExpenseAction {
     private Long id;
     private Expense expense;
@@ -39,6 +41,7 @@ public class ExpenseAction {
      *
      * @post timestamp != NULL
      */
+    @PrePersist
     void onCreate() {
         timestamp = OffsetDateTime.now();
     }
@@ -50,6 +53,8 @@ public class ExpenseAction {
      *
      * @post getId = id
      */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() { return id; }
 
     /**
@@ -71,6 +76,8 @@ public class ExpenseAction {
      *
      * @post getExpense = expense
      */
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "expense_id")
     public Expense getExpense() {
         return expense;
     }
@@ -96,6 +103,8 @@ public class ExpenseAction {
      *
      * @post getActor = actor
      */
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "actor_user_id")
     public User getActor() {
         return actor;
     }
@@ -120,6 +129,7 @@ public class ExpenseAction {
      *
      * @post getAction = action
      */
+    @Column(nullable = false)
     public String getAction() {
         return action;
     }
@@ -144,6 +154,7 @@ public class ExpenseAction {
      *
      * @post getComment = comment
      */
+    @Column(length = 500)
     public String getComment() {
         return comment;
     }
@@ -168,6 +179,7 @@ public class ExpenseAction {
      *
      * @post getTimestamp = timestamp
      */
+    @Column(nullable = false)
     public OffsetDateTime getTimestamp() {
         return timestamp;
     }
