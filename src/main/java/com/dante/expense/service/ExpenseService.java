@@ -274,5 +274,39 @@ public class ExpenseService {
         return toResponse(saved);
     }
 
+    /**
+     * Reimburses an expense, with the option to comment on why
+     *
+     * @param expenseId the id of the expense to reimburse
+     * @param actorUserId the id of the user performing the action
+     * @param comment an optional comment
+     *
+     * @return The updated expense as an Expense obj
+     *
+     * @pre expenseId != NULL AND expenseId >= 0
+     * @pre
+     *
+     */
+    public ExpenseResponse reimburseExpense(Long expenseId, Long actorUserId, String comment) {
+        Expense expense = expenseRepo.findById(expenseId).orElseThrow(() -> new NotFoundException("Expense not found: " + expenseId));
+
+        User actor = userRepo.findById(actorUserId).orElseThrow(() -> new NotFoundException("User not found: " + actorUserId));
+
+        if (actor.getRole() != Role.FINANCE) {
+            throw new ForbiddenException("Only FINANCE can reimburse expenses");
+        }
+
+        if (expense.getStatus() != ExpenseStatus.APPROVED) {
+            throw new BadRequestException("Only approved expenses can be reimbursed");
+        }
+
+        expense.setStatus(ExpenseStatus.REIMBURSED);
+
+        logAction(expense, actor, ExpenseActionType.REIMBURSE, comment);
+
+        Expense saved = expenseRepo.save(expense);
+        return toResponse(saved);
+    }
+
 
 }

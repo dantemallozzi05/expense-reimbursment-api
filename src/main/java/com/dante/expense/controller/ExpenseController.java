@@ -6,6 +6,7 @@ import com.dante.expense.dto.RejectExpenseRequest;
 import com.dante.expense.service.ExpenseService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+import com.dante.expense.dto.CommentRequest;
 
 import java.util.List;
 
@@ -105,6 +106,17 @@ public class ExpenseController {
         String reason = (req == null) ? null : req.getReason();
         return expenseService.rejectExpense(actorUserId, expenseId, reason);
     }
+
+    public ExpenseResponse reimburse(
+            @PathVariable Long id,
+            @RequestHeader("X-User-Id") Long userId,
+            @RequestBody(required = false) RequestBody body
+    ) {
+        String comment = (body == null) ? null : body.;
+
+        return expenseService.reimburseExpense(id, userId, comment);
+    }
+
 
 
 }
