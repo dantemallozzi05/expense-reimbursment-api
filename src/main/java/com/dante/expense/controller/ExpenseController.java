@@ -86,7 +86,7 @@ public class ExpenseController {
      * @post for all r in return, r.userId = userId
      */
     @GetMapping
-    public List<ExpenseResponse> listByUser(Long userId) {
+    public List<ExpenseResponse> listByUser(@RequestParam("userId") Long userId) {
         return expenseService.ListExpensesByUser(userId);
     }
 
@@ -98,6 +98,7 @@ public class ExpenseController {
         return expenseService.approveExpense(actorUserId, expenseId);
     }
 
+    @PutMapping("/{id}/reject")
     public ExpenseResponse rejectExpense(
             @RequestHeader("X-User-Id") Long actorUserId,
             @PathVariable("id") Long expenseId,
@@ -107,14 +108,15 @@ public class ExpenseController {
         return expenseService.rejectExpense(actorUserId, expenseId, reason);
     }
 
+    @PutMapping("/{id}/reimburse")
     public ExpenseResponse reimburse(
             @PathVariable Long id,
-            @RequestHeader("X-User-Id") Long userId,
-            @RequestBody(required = false) RequestBody body
+            @RequestHeader("X-User-Id") Long actorUserId,
+            @RequestBody(required = false) CommentRequest body
     ) {
-        String comment = (body == null) ? null : body.;
+        String comment = (body == null) ? null : body.comment();
 
-        return expenseService.reimburseExpense(id, userId, comment);
+        return expenseService.reimburseExpense(id, actorUserId, comment);
     }
 
 

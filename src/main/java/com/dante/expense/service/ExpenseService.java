@@ -284,7 +284,16 @@ public class ExpenseService {
      * @return The updated expense as an Expense obj
      *
      * @pre expenseId != NULL AND expenseId >= 0
-     * @pre
+     * @pre actorUserId != NULL AND actorUserId >= 0
+     *
+     * @post An ExpenseAction is modified to actionType = REIMBURSE, actor.id = actorUserId, expenseId = expenseId, comment = comment
+     * @post return.id = expenseId
+     * @post return.status = REIMBURSED
+     * @post return != NULL
+     *
+     * @throws NotFoundException if actor user / expense doesn't exist
+     * @throws ForbiddenException if actor isn't a FINANCE user
+     * @throws BadRequestException if expense isn't approved
      *
      */
     public ExpenseResponse reimburseExpense(Long expenseId, Long actorUserId, String comment) {
