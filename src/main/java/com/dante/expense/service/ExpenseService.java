@@ -114,6 +114,12 @@ public class ExpenseService {
         return toResponse(e);
     }
 
+    public List<ExpenseAction> getExpenseActions(Long expenseId)s {
+        Expense expense = expenseRepo.findById(expenseId).orElseThrow(() -> new NotFoundException("Expense " + expenseId + " not found."));
+
+        return ExpenseActionRepository.findByExpenseIdOrdered(expense.getId());
+    }
+
     /**
      * Lists all expenses belonging to the specified user
      *
@@ -128,6 +134,15 @@ public class ExpenseService {
      */
     public List<ExpenseResponse> ListExpensesByUser(Long userId) {
         return expenseRepo.findByUserId(userId).stream().map(this::toResponse).toList();
+    }
+
+    /**
+     *
+     */
+    public List<ExpenseResponse> listExpenseByStatus(ExpenseStatus) {
+        return expenseRepo.findByStatus(status).stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     /**

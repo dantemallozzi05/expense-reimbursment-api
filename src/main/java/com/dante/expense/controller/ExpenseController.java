@@ -3,6 +3,8 @@ package com.dante.expense.controller;
 import com.dante.expense.dto.CreateExpenseRequest;
 import com.dante.expense.dto.ExpenseResponse;
 import com.dante.expense.dto.RejectExpenseRequest;
+import com.dante.expense.entity.ExpenseAction;
+import com.dante.expense.entity.ExpenseStatus;
 import com.dante.expense.service.ExpenseService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -108,6 +110,27 @@ public class ExpenseController {
         return expenseService.rejectExpense(actorUserId, expenseId, reason);
     }
 
+    /**
+     * Reimburses a previously approved expense, while logging a REIMBURSE audit
+     *
+     * @param id id of the expense to reimburse
+     * @param actorUserId the user performing the reimbursement
+     * @param body request with comment
+     *
+     * @return response representing the updated expense
+     *
+     * @pre actorUserId != NULL AND actorUserId >= 0
+     * @pre id != NULL AND id >= 0
+     *
+     * @post return != NULL
+     * @post return.id = id
+     * @post return.status = REIMBURSED
+     * @post an ExpenseAction is persisted with actionType = REIMBURSE, actor.id = actorUserId, expense.id = id, comment = body.comment
+     *
+     * @throws NotFoundException if actor user or id doesn't exist
+     * @throws ForbiddenException if actor isn't a FINANCE user
+     * @throws BadRequestException if expense status isn't approved
+     */
     @PutMapping("/{id}/reimburse")
     public ExpenseResponse reimburse(
             @PathVariable Long id,
@@ -117,6 +140,25 @@ public class ExpenseController {
         String comment = (body == null) ? null : body.comment();
 
         return expenseService.reimburseExpense(id, actorUserId, comment);
+    }
+
+    /**
+     *
+     * @param expenseId id of the expense whose actions are being retrieved
+     *
+     * @return list of ExpenseAction rows for an expense along with their timestamp
+     *
+     * @pre expenseId != NULL AND expenseId >= 0
+     *
+     * @post return != NULL
+     * @post every actions expense.id = expenseid
+     * @post return is ordered oldest first
+     *
+     * @throws NotFoundException if expense doesn't exist
+     *
+     */
+    public List<ExpenseAction> getActions(@PathVariable("id") Long expenseId) {
+        return expenseService.getExpenseActions(expenseId);
     }
 
 

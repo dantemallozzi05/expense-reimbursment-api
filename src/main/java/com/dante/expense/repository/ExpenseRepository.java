@@ -1,6 +1,7 @@
 package com.dante.expense.repository;
 
 import com.dante.expense.entity.Expense;
+import com.dante.expense.entity.ExpenseStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -24,4 +25,18 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
      * @post return != NULL
      */
     List<Expense> findByUserId(Long userId);
+
+    /**
+     * Finds all expenses with given status
+     *
+     * @param status the status filter to apply
+     *
+     * @return list of expenses matching the status searched
+     *
+     * @pre status != NULL
+     *
+     * @post return != NULL
+     * @post for each expense in return, expense.status = status
+     */
+    List<Expense> findByStatus(ExpenseStatus status);
 }
