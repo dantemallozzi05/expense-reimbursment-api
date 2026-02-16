@@ -87,4 +87,19 @@ mvn spring-boot:run
 
 ---
 
+## Business Workflow
+``` bash
+SUBMITTED > APPROVED > REIMBURSED
+        |
+        L> REJECTED
+```
+
+Validation rules enforced in Service layer:
+
+- Only managers can approve / reject expenses
+- Only Finance role can reimburse
+- Cannot reimburse an expense unless it's approved
+- Cannot approve an expense twice
+
+
 
