@@ -69,7 +69,8 @@ config/
 ### 1. Clone the repository
 
 ``` bash
-
+git clone https://github.com/dantemallozzi05/expense-reimbursment-api.git
+cd expense-reimbursment-api
 ```
 
 ### 2. Start PostgreSQL with Docker
