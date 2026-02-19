@@ -3,6 +3,8 @@ package com.dante.expense.repository;
 import com.dante.expense.entity.ExpenseAction;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  * Repository interface for persisting / retrieving ExpenseAction audit records
  *

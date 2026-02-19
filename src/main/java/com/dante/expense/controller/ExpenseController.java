@@ -4,7 +4,6 @@ import com.dante.expense.dto.CreateExpenseRequest;
 import com.dante.expense.dto.ExpenseResponse;
 import com.dante.expense.dto.RejectExpenseRequest;
 import com.dante.expense.entity.ExpenseAction;
-import com.dante.expense.entity.ExpenseStatus;
 import com.dante.expense.service.ExpenseService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -71,7 +70,7 @@ public class ExpenseController {
      * @post return.id = id
      */
     @GetMapping("/{id}")
-    public ExpenseResponse getById(Long id) {
+    public ExpenseResponse getById(@PathVariable("id") Long id) {
         return expenseService.getExpense(id);
     }
 
@@ -89,7 +88,7 @@ public class ExpenseController {
      */
     @GetMapping
     public List<ExpenseResponse> listByUser(@RequestParam("userId") Long userId) {
-        return expenseService.ListExpensesByUser(userId);
+        return expenseService.listExpensesByUser(userId);
     }
 
     @PutMapping("/{id}/approve")
@@ -151,12 +150,13 @@ public class ExpenseController {
      * @pre expenseId != NULL AND expenseId >= 0
      *
      * @post return != NULL
-     * @post every actions expense.id = expenseid
+     * @post every actions expense.id = expenseId
      * @post return is ordered oldest first
      *
      * @throws NotFoundException if expense doesn't exist
      *
      */
+    @GetMapping("/{id}/actions")
     public List<ExpenseAction> getActions(@PathVariable("id") Long expenseId) {
         return expenseService.getExpenseActions(expenseId);
     }

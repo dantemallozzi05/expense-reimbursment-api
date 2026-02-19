@@ -114,10 +114,26 @@ public class ExpenseService {
         return toResponse(e);
     }
 
-    public List<ExpenseAction> getExpenseActions(Long expenseId)s {
+    /**
+     * Returns the audit/action history for a given expense, ordered oldest to newest
+     *
+     * @param expenseId the id of the expense whose action history is requested
+     *
+     * @return list of ExpenseAction rows for the expense in ascending timestamp order
+     *
+     * @pre expenseId != NULL AND expenseId >= 0
+     *
+     * @post return != NULL
+     * @post for each action in return: action.expense.id = expenseId
+     * @post return is ordered by timestamp in ascending order
+     *
+     * @throws NotFoundException if the expense doesn't exist
+     */
+    @Transactional(readOnly = true)
+    public List<ExpenseAction> getExpenseActions(Long expenseId) {
         Expense expense = expenseRepo.findById(expenseId).orElseThrow(() -> new NotFoundException("Expense " + expenseId + " not found."));
 
-        return ExpenseActionRepository.findByExpenseIdOrdered(expense.getId());
+        return actionRepo.findByExpenseIdOrdered(expenseId);
     }
 
     /**
@@ -132,14 +148,22 @@ public class ExpenseService {
      * @post return != NULL
      * @post for all r in return, r.userId = userId
      */
-    public List<ExpenseResponse> ListExpensesByUser(Long userId) {
+    public List<ExpenseResponse> listExpensesByUser(Long userId) {
         return expenseRepo.findByUserId(userId).stream().map(this::toResponse).toList();
     }
 
     /**
+     * @param status the status to filter expenses by
      *
+     * @return a list of ExpenseResponse objs from all matching expenses
+     *
+     * @pre status != null
+     *
+     * @post result != null
+     * @post for all r in result: r.status == status
+     * @post result.size() == # of expense rows with Expense.status == #status
      */
-    public List<ExpenseResponse> listExpenseByStatus(ExpenseStatus) {
+    public List<ExpenseResponse> listExpenseByStatus(ExpenseStatus status) {
         return expenseRepo.findByStatus(status).stream()
                 .map(this::toResponse)
                 .toList();
