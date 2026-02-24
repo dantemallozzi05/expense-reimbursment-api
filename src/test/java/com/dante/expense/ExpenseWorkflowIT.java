@@ -36,7 +36,7 @@ public class ExpenseWorkflowIT {
         }
         """;
 
-        String resp = mvc.perform(post("api/expenses")
+        String resp = mvc.perform(post("/api/expenses")
                 .header("X-User-Id", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body))
@@ -118,7 +118,7 @@ public class ExpenseWorkflowIT {
      */
     @Test
     void employeeCannotApprove() throws Exception {
-        Long id = createdSubmittedExpense();
+        Long id = createSubmittedExpense();
 
         mvc.perform(put("/api/expenses/{id}/approve", id)
                 .header("X-User-Id", "1"))
@@ -138,7 +138,7 @@ public class ExpenseWorkflowIT {
     void financeCannotReimburseSubmitted() throws Exception {
         Long id = createSubmittedExpense();
 
-        mvc.perform(put("/api/expense/{id}/reimburse", id)
+        mvc.perform(put("/api/expenses/{id}/reimburse", id)
                 .header("X-User-Id", "3")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"comment\":\"nope\"}"))
