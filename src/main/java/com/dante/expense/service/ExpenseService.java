@@ -133,7 +133,7 @@ public class ExpenseService {
     public List<ExpenseAction> getExpenseActions(Long expenseId) {
         Expense expense = expenseRepo.findById(expenseId).orElseThrow(() -> new NotFoundException("Expense " + expenseId + " not found."));
 
-        return actionRepo.findByExpenseIdOrdered(expenseId);
+        return actionRepo.findByExpense_IdOrderByTimestampAsc(expenseId);
     }
 
     /**

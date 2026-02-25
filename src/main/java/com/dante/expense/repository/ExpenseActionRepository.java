@@ -24,5 +24,5 @@ public interface ExpenseActionRepository extends JpaRepository<ExpenseAction, Lo
      * @post for each action in return, action expense.id = expenseId
      * @post return is ordered by oldest first
      */
-    List<ExpenseAction> findByExpenseIdOrdered(Long expenseId);
+    List<ExpenseAction> findByExpense_IdOrderByTimestampAsc(Long expenseId);
 }
